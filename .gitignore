@@ -1,3 +1,5 @@
 civitai/
 models/
+__pycache__/
+*.log
 
