@@ -14,14 +14,10 @@ app.registerExtension({
                     this.widgets.length = 1;
                 }
 
-                // const v = [...text];
-                // if (!v[0]) {
-                //     v.shift();
-                // }
-                // for (const list of v) {
-                const w = ComfyWidgets["STRING"](this, "text", ["STRING", { multiline: true }], app).widget;
+
+                const w = ComfyWidgets.STRING(this, "text", ["STRING", { multiline: true }], app).widget;
                 w.inputEl.readOnly = true;
-                w.inputEl.style.opacity = 0.8;
+                w.inputEl.style.opacity = 0.9;
                 w.value = text;
                 // }
 

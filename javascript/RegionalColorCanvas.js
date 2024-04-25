@@ -198,10 +198,8 @@ app.registerExtension({
 				// start with 1 region, not 0 because not an array
 				let maxRegions = 16
 				let blankRegions = {}
-				for (let i = 0; i < maxRegions; i++) {
-					for (let i = 1; i <= maxRegions; i++) {
-						blankRegions[i] = { "x": 0, "y": 0, "width": 0, "height": 0, "color": "" }
-					}
+				for (let i = 1; i <= maxRegions; i++) {
+					blankRegions[i] = { "x": 0, "y": 0, "width": 0, "height": 0, "color": "" }
 				}
 				let defaultCellSize = 64
 
@@ -213,7 +211,7 @@ app.registerExtension({
 
 				this.selected = false
 				this.regionCountWidgetIndex = 5
-
+				this.size = [315, 600]
 				this.serialize_widgets = true;
 
 				CUSTOM_INT(this, "canvasX", 512,

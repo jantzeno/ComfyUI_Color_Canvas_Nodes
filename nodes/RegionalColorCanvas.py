@@ -1,21 +1,8 @@
 # Originally MultiAreaConditioning by Davemane42#0042 for ComfyUI
 # Forked by jantzeno
 
-import numpy as np
-import torch
+from .utils import pil2tensor
 from PIL import Image, ImageDraw
-
-# ----------
-# From Comfyroll
-
-
-def tensor2pil(image):
-    return Image.fromarray(np.clip(255. * image.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
-
-
-def pil2tensor(image):
-    return torch.from_numpy(np.array(image).astype(np.float32) / 255.0).unsqueeze(0)
-# ----------
 
 
 class RegionalColorCanvas:

@@ -1,8 +1,10 @@
 # Originally by Davemane42#0042 for ComfyUI
 # Forked by jantzeno for ComfyUI
-from .nodes.RegionalColorCanvas import RegionalColorCanvas
-from .nodes.RegionalColorSelector import RegionalColorSelector
-# from .MultiLatentComposite import MultiLatentComposite
+
+from .nodes.RegionalColorCanvas import *
+from .nodes.RegionalColorRatio import *
+from .nodes.RegionalColorSelector import *
+
 import os
 import subprocess
 import importlib.util
@@ -68,7 +70,14 @@ def is_installed(package, package_overwrite=None):
 
 NODE_CLASS_MAPPINGS = {
     "RegionalColorCanvas": RegionalColorCanvas,
-    "RegionalColorSelector": RegionalColorSelector
+    "RegionalColorSelector": RegionalColorSelector,
+    "RegionalColorRatio": RegionalColorRatio
+}
+
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "RegionalColorCanvas": "Regional Color Canvas",
+    "RegionalColorSelector": "Regional Color Selector",
+    "RegionalColorRatio": "Regional Color Ratio"
 }
 
 print('\033[34mRegiopnal Color Canvas: \033[92mLoaded\033[0m')

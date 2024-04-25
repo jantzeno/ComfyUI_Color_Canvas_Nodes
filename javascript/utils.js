@@ -22,6 +22,18 @@ export function REGION_INT(node, inputName, val, max, func, config = {}) {
 	};
 }
 
+export function REGION_STRING(node, inputName, val, func, config = {}) {
+	return {
+		widget: node.addWidget(
+			"text",
+			inputName,
+			val,
+			func,
+			Object.assign({}, { multiline: false }, config)
+		)
+	};
+}
+
 export function transformFunc(widget, value, node, key) {
 	const s = widget.options.step / 10;
 	widget.value = Math.round(value / s) * s;

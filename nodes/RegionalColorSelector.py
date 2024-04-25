@@ -1,6 +1,3 @@
-import pprint
-
-
 class RegionalColorSelector:
 
     @classmethod
