@@ -1,4 +1,4 @@
-from .utils import pil2tensor, toInt, DrawColor, process_regions
+from .utils import pil2tensor, DrawColor, process_regions
 from PIL import Image, ImageDraw
 from nodes import MAX_RESOLUTION
 
@@ -13,7 +13,7 @@ class RegionalColorRatio:
                           "max": MAX_RESOLUTION, "step": 64}),
                 "height": ("INT", {"default": 512, "min": 0,
                            "max": MAX_RESOLUTION, "step": 64}),
-                "mode": (["rows", "columns"],),
+                "divide_mode": (["rows", "columns"],),
                 "rotate": ("BOOLEAN", {"default": False,
                            "label_on": "90° counter-clockwise", "label_off": "disabled"}),
                 "regions": ("INT", {"default": 1, "min": 1, "max": 16}),
@@ -27,7 +27,7 @@ class RegionalColorRatio:
     FUNCTION = "doStuff"
     CATEGORY = "Regional Colors"
 
-    def doStuff(self, width, height, mode, rotate, regions, extra_pnginfo, unique_id, **kwargs):
+    def doStuff(self, width, height, divide_mode, rotate, regions, extra_pnginfo, unique_id, **kwargs):
 
         region_data = []
         color_map = {}
@@ -48,6 +48,19 @@ class RegionalColorRatio:
 
         region_data = process_regions(input_regions, color)
 
+        # rotate cells 90 degrees counter-clockwise
+        if rotate:
+            width, height = height, width
+            if divide_mode == "columns":
+                divide_mode = "rows"
+                for r, d in region_data.items():
+                    if r == "layout":
+                        continue
+                    d["cell_ratios"] = list(reversed(d["cell_ratios"]))
+            else:
+                divide_mode = "columns"
+                region_data = dict(reversed(region_data.items()))
+
         image = Image.new("RGB", (width, height))
         image_numbered = Image.new("RGB", (width, height))
         draw = ImageDraw.Draw(image)
@@ -61,13 +74,13 @@ class RegionalColorRatio:
                 continue
             region_percentage = region_data["layout"][int(region) - 1]
             cell_count = len(values["cell_ratios"])
-            if mode == "rows":
+            if divide_mode == "columns":
                 thickness = region_percentage * height
             else:
                 thickness = region_percentage * width
             for i in range(cell_count):
                 fill_color = values["colors"][i]
-                if mode == "rows":
+                if divide_mode == "columns":
                     x = start_x
                     y = start_y
                     w = width * values["cell_ratios"][i]
@@ -89,16 +102,12 @@ class RegionalColorRatio:
                 color_map[str(count + 1)] = values["colors"][i]
                 count += 1
 
-            if mode == "rows":
+            if divide_mode == "columns":
                 start_x = 0
                 start_y += thickness
             else:
                 start_y = 0
                 start_x += thickness
-
-        if rotate:
-            image = image.rotate(90)
-            image_numbered = image_numbered.rotate(90)
 
         image_out = pil2tensor(image.convert("RGB"))
         image_numbered_out = pil2tensor(image_numbered.convert("RGB"))
