@@ -18,17 +18,31 @@ app.registerExtension({
 
                 this.setProperty("regions", blankRegions)
 
-                REGION_STRING(this, "region_1", this.properties["regions"][1].ratio,
-                    function (v, _, node) {
-                        node.properties["regions"][1].ratio = v
-                    })
-
                 this.size = [315, 255]
                 const inputHeight = 24
 
                 let regionCountWidget = this.widgets.find((w) => w.name === "regions");
 
                 if (regionCountWidget) {
+
+                    let preRegions = regionCountWidget.value
+                    if (preRegions > 1) {
+                        for (let i = 1; i < preRegions; i++) {
+                            REGION_STRING(this, "region_" + (i + 1), this.properties["regions"][i + 1].ratio,
+                                function (v, _, node) {
+                                    node.properties["regions"][i + 1].ratio = v
+                                })
+                            this.widgets.find((w) => w.name === "region_" + (i + 1)).value = this.properties["regions"][i + 1].ratio
+                        }
+                        this.size = [this.size[0], this.size[1] + addHeight]
+                    } else {
+                        REGION_STRING(this, "region_1", this.properties["regions"][1].ratio,
+                            function (v, _, node) {
+                                node.properties["regions"][1].ratio = v
+                            })
+                    }
+
+
                     regionCountWidget.callback = (v) => {
                         let widgetCount = this.widgets.filter((w) => w.name.startsWith("region_")).length
                         if (v > widgetCount) {
